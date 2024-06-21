@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>书籍信息</title>
+</head>
+<body>
+    {% extends 'base.html' %}
+    {% block title %}书籍信息{% endblock %}
+    {% block content %}
+        <div class="container-fluid">
+            <div class="col-lg-12">       
+        <h3>书籍信息</h3>
+        <div class="container">
+            <form action="/user/bookinfo/" method="post" id = "bookinfo_search">
+                <div style="display: flex;">
+                    {{search.message}}
+                    <button type="submit" class="btn btn-primary pull-right" id="btnbook_Search">搜索</button>
+                </div>
+            </form>
+			<table class="table table-hover" id = "bookinfo_table">
+				<thead>
+					<tr>
+                        <th scope="col">操作</th>
+						<th scope="col">bid</th>
+						<th scope="col">ISBN</th>
+						<th scope="col">书名</th>
+						<th scope="col">作者</th>
+						<th scope="col">出版社</th>
+                        <th scope="col">出版日期</th>
+                        <th scope="col">类型</th>
+                        <th scope="col">库存</th>
+                        <th scope="col">存放位置</th>
+                        <th scope="col">图片信息</th>
+					</tr>
+				</thead>
+				<tbody>
+                    {% for i in book_info %}
+					<tr id="bookinfo_{{i.bid}}">                        						
+                        <td>
+                            <div style="display: flex;">
+                                <input type="button" class="btn btn-default btn-custom" value="编辑" id="btnbook_change_{{i.bid}}">
+                                <input type="button" class="btn btn-default btn-custom" value="删除" id="btnbook_delete_{{i.bid}}">
+                                <input type="button" class="btn btn-default btn-custom" value="借阅" id="btnbook_borrow_{{i.bid}}">
+                                <input type="button" class="btn btn-default btn-custom" value="预定" id="btnbook_reserve_{{i.bid}}">
+
+                            </div>
+                        </td> 
+                        <th scope="row">{{i.bid}} </th>   
+                        <td>{{i.isbn}}</td>           
+						<td>{{i.bname}}</td>
+						<td>{{i.author}}</td>
+						<td>{{i.publisher}}</td>
+						<td>{{i.publish_date}}</td>
+                        <td>{{i.btype}}</td>
+                        <td>{{i.inventory}}</td>
+                        <td>{{i.store_loc}}</td>
+                        <td>                        
+                            <img src="/static/media/{{ i.book_pic }}" style="height: 80px;">
+                        </td>
+					</tr>
+                    <script>                       
+                        $(document).ready(function () {
+                            $('#btnbook_delete_{{i.bid}}').click(function () {
+                                location.href = '/user/bookinfo/delete/{{i.bid}}'
+                            });
+                            $('#btnbook_change_{{i.bid}}').click(function () {
+                                location.href = '/user/bookinfo/change/{{i.bid}}'
+                            });
+                            $('#btnbook_borrow_{{i.bid}}').click(function () {
+                                location.href = '/user/bookinfo/borrow/{{i.bid}}'
+                            });
+                            $('#btnbook_reserve_{{i.bid}}').click(function () {
+                                location.href = '/user/bookinfo/reserve/{{i.bid}}'
+                            });  
+                        })                   
+                    </script>
+					{% endfor %}
+				</tbody>
+			</table>
+            <div style="display: flex;">
+                <button type="button" class="btn btn-default btn-custom" id="btnbook_add">添加图书</button>
+            </div>
+		</div>
+        
+        </div>
+    </div>
+    {% endblock %}
+</body>
+</html>

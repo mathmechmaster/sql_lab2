@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>还书</title>
+</head>
+<body>
+    {#通过下面语句 继承了base.html 模板的内容#}
+    {% extends 'base.html' %}
+    {% load static %}
+    {% block title %}还书{% endblock %}
+    {% block css %}
+        <link rel="stylesheet" href="{% static 'css/login.css' %}">
+    {% endblock %}
+      
+      
+    {% block content %}
+    <div class="container-fluid">
+        <div class="col-lg-12"> 
+            {% if message %}
+                <div class="alert alert-warning">{{ message }}</div>
+            {% endif %}
+            <h3>是否要还{{bid}}?</h3>
+            <form action="/user/bookborrowinfo/return/{{bid}}" method="post">
+            <div style="display: flex;">
+                <button type="submit" class="btn btn-default btn-custom" id="btnbookreturn_yes">是</button>
+                <button type="button" class="btn btn-default btn-custom" id="btnbookreturn_no">否(返回)</button>
+            </div>
+            </form>
+      </div>
+    </div>
+    <script>
+        $('#btnbookreturn_no').click(function () {
+            location.href = '/user/bookborrowinfo'
+        });
+    </script>
+    {% endblock %}
+  
+  
+  
+</body>
+</html>

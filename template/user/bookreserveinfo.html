@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>预定信息</title>
+</head>
+<body>
+    {% extends 'base.html' %}
+    {% block title %}预定信息{% endblock %}
+    {% block content %}
+        <div class="container-fluid">
+            <div class="col-lg-12">       
+        <h3>预定信息</h3>
+        <div class="container">
+			<table class="table table-hover" id = "bookinfo_table">
+				<thead>
+					<tr>
+                        <th scope="col">操作</th>
+						<th scope="col">bid</th>
+						<th scope="col">书名</th>
+						<th scope="col">预定日期</th>
+					</tr>
+				</thead>
+				<tbody>
+                    {% for i in book_reserve_info %}
+					<tr id="book_reserve_info_{{i.bid}}">                        						
+                        <td>
+                            <div style="display: flex;">
+                                <input type="button" class="btn btn-default btn-custom" value="借阅" id="btnreserve_borrow_{{i.bid}}">
+                                <input type="button" class="btn btn-default btn-custom" value="取消预定" id="btnreserve_cancel_{{i.bid}}">
+                            </div>
+                        </td> 
+                        <th scope="row">{{i.bid}} </th>             
+						<td>{{i.bname}}</td>
+						<td>{{i.reserve_Date}}</td>
+					</tr>
+                    <script>                       
+                        $(document).ready(function () {
+                            $('#btnreserve_borrow_{{i.bid}}').click(function () {
+                                location.href = '/user/bookreserveinfo/borrow/{{i.bid}}'
+                            });
+                            $('#btnreserve_cancel_{{i.bid}}').click(function () {
+                                location.href = '/user/bookreserveinfo/cancel/{{i.bid}}'
+                            });
+                        })                   
+                    </script>
+					{% endfor %}
+				</tbody>
+			</table>
+		</div>
+        
+        </div>
+    </div>
+    {% endblock %}
+</body>
+</html>

@@ -1,0 +1,192 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- 上述3个meta标签*必须*放在最前面，任何其他内容都*必须*跟随其后！ -->
+    <title>{% block title %}base{% endblock %}</title>
+  
+    <!-- Bootstrap -->
+    <link href="{% static 'bootstrap-3.4.1-dist/css/bootstrap.min.css' %}" rel="stylesheet">
+  
+    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+      <script src="https://cdn.bootcss.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+      <script src="https://cdn.bootcss.com/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+    {% block css %}{% endblock %}
+  </head>
+  <body>
+    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+    <script src="{% static 'js/jquery-3.5.1/jquery-3.5.1.js' %}"></script>
+    <!-- Include all compiled plugins (below), or include individual files as needed -->
+    <script src="{% static 'bootstrap-3.4.1-dist/js/bootstrap.min.js' %}"></script>
+    <nav class="navbar navbar-default">
+      <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#my-nav" aria-expanded="false">
+            <span class="sr-only">切换导航条</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="#">图书管理系统</a>
+        </div>
+  
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <div class="collapse navbar-collapse" id="my-nav">
+          <ul class="nav navbar-nav">
+            <li class="active"><a href="/user/index/">主页</a></li>
+          </ul>
+          <ul class="nav navbar-nav navbar-right">
+              {% if request.session.is_login %}
+                  <li><a href="#">当前在线：{{ request.session.user_id }}</a></li>
+                  <li><a href="/user/userinfo/">个人信息</a></li>
+                  <li><a href="/user/logout/">登出</a></li>
+              {% else %}
+                  <li><a href="/user/login/">登录</a></li>
+                  <li><a href="/user/register/">注册</a></li>
+              {% endif %}
+          </ul>
+        </div><!-- /.navbar-collapse -->
+      </div><!-- /.container-fluid -->
+    </nav>
+  
+    {% block content %}{% endblock %}
+  
+  
+    <script>
+    $(document).ready(function () {
+      //avatarImgClick(); //选择头像的程序
+      btnShowClick();   //单击编辑按钮的程序
+      btnSubmit();    //单击提交按钮的程序
+    })
+  
+  // 模态框里的信息被点击的时候
+  //function avatarImgClick() {
+      /*
+ 当模态框里的图片被单击的时候：
+  1、被单击图片的路径赋给用户图标的图片；
+  2、模态框隐藏；
+  3、被单击图片的id和csrf_token组成data，通过ajax的data方法发送到后台。
+  *//*
+      $('.modal-body').on('click', 'img', function () {
+          let img_src = $(this).attr("src");
+          $("#user_img").attr("src", img_src);
+          $("#myModal").modal('hide');
+          let id = $(this).attr("id");
+          let CsrfToken = $("[name='csrfmiddlewaretoken']").val();
+          let data = {'csrfmiddlewaretoken': CsrfToken, "avatar_id": id};
+
+          $.ajax({
+              url: "/user/userinfo/",
+              type: "POST",
+              // data: {"avatar_id": id},
+              data: data,
+              dataType: "json",
+              success: function (res) {
+                  if (res.status) {
+                      console.log("头像成功保存")
+                  } else {
+                      console.log(res.message)
+                  }
+              },
+              error: function (res) {
+                  console.log("发送失败");
+              }
+          })
+      })
+  }
+  */
+
+  //编辑按钮被单击时，隐藏信息展示界面，呈现信息编辑界面
+  function btnShowClick() {
+      /*
+      编辑按钮被单击时，执行两个动作：
+      1、用户信息展示的div消失；
+      2、用户信息编辑的div呈现。
+      * */
+      $("#userinfo_show").on("click","input",function (){
+          $("#userinfo_show").attr("style", "display:none");
+          $("#userinfo_edit").attr("style", "display:block");
+      });
+      
+      $('#btnShow_manager').click(function () {
+        location.href = '/user/managerinfo'
+      });
+      $('#btnShow_student').click(function () {
+        location.href = '/user/stuinfo'
+      });
+      $('#btnShow_book').click(function () {
+        location.href = '/user/bookinfo'
+      });
+      $('#btnShow_rtn').click(function () {
+        location.href = '/user/index'
+      });
+      $('#btnbookShow_rtn').click(function () {
+        location.href = '/user/bookinfo'
+      });
+      $('#btnManager_add').click(function () {
+        location.href = '/user/manager_register'
+      });
+      $('#btnstu_add').click(function () {
+        location.href = '/user/stu_register'
+      });
+      $('#btnbook_add').click(function () {
+        location.href = '/user/bookadd'
+      });
+      $('#btnbookadd_rtn').click(function () {
+        location.href = '/user/bookinfo'
+      });
+      $('#btnborrow_book').click(function () {
+        location.href = '/user/bookborrowinfo'
+      });
+      $('#btnreserve_book').click(function () {
+        location.href = '/user/bookreserveinfo'
+      });
+  }
+
+  /*
+  提交按钮被单击时，把用户编辑form里的数据以ajax的方式提交后台。
+  如果提交成功，且修改了用户信息，隐藏信息编辑界面，呈现信息展示界面，同时刷新用户信息展示的div。
+  如果提交失败，或者修改用户信息没有成功，则什么也不做。
+   */
+  function btnSubmit() {
+      $("#btnSubmit").click(function () {
+          $('.error-msg').empty(); //清空错误信息
+          let data = $("#userinfo").serialize(); //获取form中的数据，.serialize() 方法创建以标准 URL 编码表示的文本字符串。它的操作对象是代表表单元素集合的 jQuery 对象
+          $.ajax({
+              url: "/user/userinfo/",
+              data: data,
+              type: "post",
+              dataType: "json",
+              async: true,
+              success: function (res) {
+                  if (res.status) {
+                      // 刷新用户信息展示的div，并把这个div显示在页面上
+                      $("#userinfo_show").load(location.href + " #userinfo_show>*", "").attr("style", "display:block");
+                      // 隐藏用户信息编辑的div
+                      $("#userinfo_edit").attr("style", "display:none");
+                      console.log("修改成功了");
+                  } else {
+                      // 如果修改用户信息失败，则把返回的错误信息循环展示在页面上
+                      $.each(res.errors, function (key, value) {
+                          $("#id_" + key).next().text(value);
+                      });
+                      console.log(res.errors)
+                  }
+              },
+              error: function () {
+                  console.log("发送失败了")
+              },
+          });
+      })
+  }
+</script>
+  </body>
+</html>

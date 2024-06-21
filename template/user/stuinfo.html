@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>学生信息</title>
+</head>
+<body>
+    {% extends 'base.html' %}
+    {% block title %}学生信息{% endblock %}
+    {% block content %}
+        <div class="container-fluid">
+            <div class="col-lg-12">       
+        {% if request.session.is_manager%}
+        <h3>学生信息</h3>
+        <div class="container">
+			<table class="table table-hover" id = "stuinfo_table">
+				<thead>
+					<tr>
+                        <th scope="col">操作</th>
+						<th scope="col">学号</th>
+						<th scope="col">学生姓名</th>
+						<th scope="col">性别</th>
+						<th scope="col">电话号码</th>
+						<th scope="col">电子邮箱地址</th>
+                        <th scope="col">年级</th>
+                        <th scope="col">专业</th>
+					</tr>
+				</thead>
+				<tbody>
+                    {% for i in all_info %}
+					<tr id="stuinfo_{{i.info.stu_id}}">                        						
+                        <td>
+                            <div style="display: flex;">
+                                <input type="button" class="btn btn-default btn-custom" value="编辑" id="btnstu_change_{{i.info.stu_id}}">
+                                <input type="button" class="btn btn-default btn-custom" value="删除" id="btnstu_delete_{{i.info.stu_id}}">
+                            </div>
+                        </td> 
+                        <th scope="row">{{i.info.stu_id}} </th>                    
+						<td>{{i.info.stu_name}}</td>
+						<td>{{i.info.gender}}</td>
+						<td>{{i.info.phone_num}}</td>
+						<td>{{i.info.email}}</td>
+                        <td>{{i.info.grade}}</td>
+                        <td>{{i.info.major}}</td>
+					</tr>
+                    <tr id="stuinfoedit_{{i.info.stu_id}}" style="display: none">  
+                        <form method="post" action="/user/stuinfo/" name="stuinfopost_{{i.info.stu_id}}" id="stuinfopost_{{i.info.stu_id}}">
+                        {% csrf_token %}
+                        <td>
+                            <div style="display: flex;">
+                                <button type="reset" class="btn btn-default pull-left">重置</button>
+                                <button type="submit" class="btn btn-primary pull-right" id="btnstu_Submit_{{i.info.stu_id}}">提交</button>
+                            </div>
+                        </td> 
+                        <th scope="row">{{i.info.stu_id}} </th> 
+                        {% for form in i.forms %}
+                            <td>{{form}}</td>
+                        {% endfor %}
+                        </form>
+					</tr>
+                    <script>
+                        $(document).ready(function () {
+                            $('#btnstu_delete_{{i.info.stu_id}}').click(function () {
+                                location.href = '/user/stuinfo/delete/{{i.info.stu_id}}'
+                            });
+                            $("#stuinfo_{{i.info.stu_id}}").on("click","#btnstu_change_{{i.info.stu_id}}",function (){
+                                $("#stuinfo_{{i.info.stu_id}}").attr("style", "display:none");
+                                $("#stuinfoedit_{{i.info.stu_id}}").attr("style", "display:block");
+                            });
+                            $('#btnstu_Submit_{{i.info.stu_id}}').click(function (){
+                                $("#stuinfo_{{i.info.stu_id}}").attr("style", "display:block");
+                                $("#stuinfoedit_{{i.info.stu_id}}").attr("style", "display:none");
+                                location.reload();
+                            });  
+                        })
+                    </script>
+					{% endfor %}
+				</tbody>
+			</table>
+            <div style="display: flex;">
+                <button type="button" class="btn btn-default btn-custom" id="btnstu_add">添加学生</button>
+            </div>
+		</div>
+        {% else %}
+        <h3>没有访问权限！</h3>
+        <div style="display: flex;">
+        <button type="button" class="btn btn-default btn-custom" id="btnShow_rtn">返回</button>
+        </div>
+        {% endif %}
+        
+        </div>
+    </div>
+    {% endblock %}
+</body>
+</html>

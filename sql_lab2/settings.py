@@ -80,7 +80,7 @@ DATABASES = {
         "ENGINE": "django.db.backends.mysql",
         "NAME": "sql_lab2",
         'USER': 'root',
-        'PASSWORD': 'Myq888oten',
+        'PASSWORD': '###',    #这里将密码信息隐去
         'HOST': 'localhost',
         'PORT': '3306',
     }
